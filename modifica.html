@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width">
+ <title>Modificar</title>
+
+ <!-- Estilos añadidos -->
+ <style>
+   body {
+     font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+     background-color: #f5f7fa;
+     margin: 0;
+     padding: 20px;
+     display: flex;
+     justify-content: center;
+     min-height: 100vh;
+   }
+   #forma {
+     background-color: white;
+     padding: 30px;
+     border-radius: 8px;
+     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+     max-width: 500px;
+     width: 100%;
+   }
+   h1 {
+     color: #2c3e50;
+     margin-top: 0;
+     text-align: center;
+     border-bottom: 2px solid #3498db;
+     padding-bottom: 10px;
+   }
+   a {
+     color: #e74c3c;
+     text-decoration: none;
+     font-weight: bold;
+   }
+   a:hover {
+     text-decoration: underline;
+   }
+   label {
+     display: block;
+     margin-bottom: 8px;
+     font-weight: 600;
+     color: #34495e;
+   }
+   input {
+     width: 100%;
+     padding: 10px;
+     border: 1px solid #ddd;
+     border-radius: 4px;
+     box-sizing: border-box;
+     font-size: 16px;
+     margin-top: 5px;
+   }
+   input:focus {
+     border-color: #3498db;
+     outline: none;
+     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+   }
+   p {
+     margin: 15px 0;
+   }
+   p:nth-last-child(2) {
+     color: #7f8c8d;
+     font-size: 14px;
+     font-style: italic;
+   }
+   button {
+     padding: 12px 20px;
+     border-radius: 4px;
+     cursor: pointer;
+     font-size: 16px;
+     font-weight: 600;
+     transition: all 0.3s ease;
+     margin-right: 10px;
+   }
+   button[type="submit"] {
+     background-color: #3498db;
+     color: white;
+     border: none;
+   }
+   button[type="submit"]:hover {
+     background-color: #2980b9;
+   }
+   button[type="button"] {
+     background-color: #f1f1f1;
+     color: #e74c3c;
+     border: 1px solid #ddd;
+   }
+   button[type="button"]:hover {
+     background-color: #e74c3c;
+     color: white;
+   }
+   input[type="hidden"] {
+     display: none;
+   }
+ </style>
+
+ <script type="module" src="lib/js/consumeJson.js"></script>
+ <script type="module" src="lib/js/submitForm.js"></script>
+ <script type="module" src="lib/js/muestraObjeto.js"></script>
+ <script type="module" src="lib/js/muestraError.js"></script>
+
+ <script>
+  // Obtiene los parámetros de la página.
+  const params = new URL(location.href).searchParams
+ </script>
+</head>
+
+<body onload="if (params.size > 0) {
+   consumeJson('srv/pasatiempo.php?' + params)
+    .then(respuesta => muestraObjeto(forma, respuesta.body))
+    .catch(muestraError)
+  }">
+
+ <form id="forma" onsubmit="submitForm('srv/pasatiempo-modifica.php', event)
+    .then(respuesta => location.href = 'index.html')
+    .catch(muestraError)">
+
+  <h1>Modificar</h1>
+
+  <p><a href="index.html">Cancelar</a></p>
+
+  <input name="id" type="hidden">
+
+  <p>
+   <label>
+    Nombre *
+    <input name="nombre" value="Cargando&hellip;">
+   </label>
+  </p>
+
+  <p>* Obligatorio</p>
+
+  <p>
+   <button type="submit">Guardar</button>
+   <button type="button" onclick="
+     if (params.size > 0 && confirm('Confirma la eliminación')) {
+      consumeJson('srv/pasatiempo-elimina.php?' + params)
+       .then(() => location.href = 'index.html')
+       .catch(muestraError)
+     }">
+    Eliminar
+   </button>
+  </p>
+
+ </form>
+
+</body>
+</html>
